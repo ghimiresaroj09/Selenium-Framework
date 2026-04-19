@@ -314,11 +314,6 @@ pytest -s -v --html=report.html
 See `requirements.txt` for complete list with versions.
 
 
-## Support
-
-For issues, questions, or suggestions, please open an issue on the repository.
-
----
 
 **Last Updated:** April 2026  
 **Framework Version:** 1.0.0
