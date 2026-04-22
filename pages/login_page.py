@@ -16,6 +16,7 @@ class LoginPage(BasePage):
         self.login_button_locator = (By.XPATH,"//button[@type='submit']")
 
     def login(self, email, password):
-        self.enter_text(self.email_locator,email)
-        self.enter_text(self.password_locator,password)
+        self.enter_text(self.email_locator, email)
+        self.enter_text(self.password_locator, password)
         self.click_element(self.login_button_locator)
+    

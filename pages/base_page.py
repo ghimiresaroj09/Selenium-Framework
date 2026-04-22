@@ -483,3 +483,28 @@ class BasePage:
             logger.info(f"File uploaded successfully: {file_path}")
         except Exception as e:
             logger.error(f"Failed to upload file: {e}")
+
+    def get_error_message(self):
+        """
+        Get error message from alert element
+        
+        Returns:
+            str: Error message text
+        """
+        return self.get_element_text(self.message_locator)
+        
+    def expand_sidebar_if_collapsed(self):
+        # Example: click the expand button if sidebar is collapsed
+        sidebar_toggle = (By.XPATH, "(//button)[1]")
+        try:
+            btn = WebDriverWait(self.driver, 3).until(EC.element_to_be_clickable(sidebar_toggle))
+            btn.click()
+        except:
+            pass  # already expanded
+
+    def clear_search_box(self):
+        try:
+            search_box = self.wait.until(EC.visibility_of_element_located(self.search_box_locator))
+            search_box.clear()
+        except Exception as e:
+            print(f"Failed to clear search box: {e}")

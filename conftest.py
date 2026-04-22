@@ -30,9 +30,9 @@ def pytest_addoption(parser):
 
     parser.addoption(
         "--headless",
-        action="store_true",
-        default=False,
-        help="Run tests in headless mode"
+        action="store",
+        default="false",
+        help="Run tests in headless mode (true/false)"
     )
 
 
@@ -43,7 +43,7 @@ def pytest_addoption(parser):
 def test_config(request):
     return {
         "browser": request.config.getoption("--browser").lower(),
-        "headless": request.config.getoption("--headless")
+        "headless": request.config.getoption("--headless").lower() in ("true", "1", "yes")
     }
 
 
@@ -54,8 +54,8 @@ def test_config(request):
 def driver(test_config):
 
     driver = DriverManager.create_driver(
-        browser_name=test_config["browser"]
-
+        browser_name=test_config["browser"],
+        headless=test_config["headless"]
     )
 
     logger.info(f"Driver started: {test_config['browser']} | headless={test_config['headless']}")
