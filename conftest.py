@@ -9,6 +9,7 @@ from utilities.logger import get_logger
 from dotenv import load_dotenv
 import sys
 import os
+from datetime import datetime
 
 # Load environment variables from .env file
 load_dotenv()
@@ -103,7 +104,8 @@ def pytest_runtest_makereport(item, call):
 
         if driver:
             try:
-                screenshot_path = f"screenshots/{item.name}.png"
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                screenshot_path = f"screenshots/{item.name}_{timestamp}.png"
                 driver.save_screenshot(screenshot_path)
                 logger.error(f"Screenshot saved: {screenshot_path}")
             except Exception as e:

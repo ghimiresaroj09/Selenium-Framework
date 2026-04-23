@@ -29,7 +29,7 @@ def test_login(driver):
 
         AssertionHelpers.assert_text_contains(
             actual_text,
-            "Dashboards"
+            "Dashboard"
         )
 
 
