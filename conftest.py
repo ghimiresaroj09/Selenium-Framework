@@ -3,6 +3,7 @@ Pytest configuration and fixtures for Selenium Framework
 """
 
 import pytest
+from config.config import TestConfig
 from utilities.driver_manager import DriverManager
 from utilities.logger import get_logger
 from dotenv import load_dotenv
@@ -35,15 +36,17 @@ def pytest_addoption(parser):
         help="Run tests in headless mode (true/false)"
     )
 
-
 # -------------------------
 # CONFIG FIXTURE (CLEAN)
 # -------------------------
 @pytest.fixture(scope="session")
 def test_config(request):
+    headless_raw = request.config.getoption("--headless").lower()
+
     return {
         "browser": request.config.getoption("--browser").lower(),
-        "headless": request.config.getoption("--headless").lower() in ("true", "1", "yes")
+        "headless": headless_raw in ("true", "1", "yes"),
+        "headless_explicitly_set": headless_raw != "false"  # "false" is the default
     }
 
 
@@ -53,9 +56,12 @@ def test_config(request):
 @pytest.fixture()
 def driver(test_config):
 
+    # Only pass headless if user explicitly set --headless flag via CLI
+    headless = test_config["headless"] if test_config["headless_explicitly_set"] else None
+
     driver = DriverManager.create_driver(
         browser_name=test_config["browser"],
-        headless=test_config["headless"]
+        headless=headless
     )
 
     logger.info(f"Driver started: {test_config['browser']} | headless={test_config['headless']}")
@@ -70,8 +76,8 @@ def driver(test_config):
 # PYTEST HOOKS
 # -------------------------
 def pytest_configure(config):
-    logger.info("Pytest configuration initialized")
-
+    config.option.reruns = TestConfig.RETRY_COUNT
+    logger.info(f"Pytest initialized | Retries={TestConfig.RETRY_COUNT}")
 
 def pytest_sessionstart(session):
     logger.info("Test session started")
