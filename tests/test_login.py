@@ -10,8 +10,6 @@ from config.credentials import Credentials
 @allure.title("Verify successful login with valid credentials")
 @allure.story("Successful Login")
 @allure.severity(allure.severity_level.CRITICAL)
-@pytest.mark.smoke
-@pytest.mark.regression
 def test_login(driver):
     login_page = LoginPage(driver)
 
